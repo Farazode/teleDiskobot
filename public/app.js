@@ -26,4 +26,18 @@ document.addEventListener('DOMContentLoaded', () => {
         botResponse.textContent = 'Failed to generate invite link. Please try again.';
       });
   });
+
+  // Initialize Telegram Web App
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+
+  // Use Telegram theme color for the popup
+  tg.MainButton.setParams({ text: 'Close' });
+  closePopupButton.addEventListener('click', () => {
+    tg.MainButton.hide();
+  });
+
+  getInviteLinkButton.addEventListener('click', () => {
+    tg.MainButton.hide();
+  });
 });

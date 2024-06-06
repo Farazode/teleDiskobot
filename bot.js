@@ -1,12 +1,14 @@
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
 const bot = new TelegramBot(token, { polling: true });
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 app.use(express.static('public'));
 
 const users = {};
@@ -24,8 +26,8 @@ bot.onText(/\/start/, (msg) => {
       inline_keyboard: [
         [
           {
-            text: 'Start',
-            callback_data: 'start_interaction'
+            text: 'Open Teledisko Mini App',
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' }
           }
         ]
       ]
@@ -81,7 +83,7 @@ app.get('/generate-invite-link', (req, res) => {
   res.json({ link: inviteLink });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
