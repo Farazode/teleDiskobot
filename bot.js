@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: true, request: { verbose: true } });
 
 const app = express();
 app.use(bodyParser.json());
@@ -27,7 +27,7 @@ bot.onText(/\/start/, (msg) => {
         [
           {
             text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://farazode.github.io/teleDiskobot/' }
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Update this to your actual GitHub Pages URL
           }
         ]
       ]
@@ -37,7 +37,9 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
 
+// Handle data sent from the web app
 bot.on('web_app_data', (msg) => {
+  console.log('Received web app data:', msg); // Log the received data
   const chatId = msg.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
@@ -47,7 +49,6 @@ bot.on('web_app_data', (msg) => {
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
   }
 });
-
 
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
@@ -77,12 +78,6 @@ bot.onText(/\/start (\d+)/, (msg, match) => {
 
     bot.sendMessage(chatId, 'Thank you for joining! Now invite 2 more friends to unlock the secret group. Use /invite to get your unique invite link.');
   }
-});
-
-app.get('/generate-invite-link', (req, res) => {
-  const userId = 123456789;  // Replace this with dynamic user ID retrieval if needed
-  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-  res.json({ link: inviteLink });
 });
 
 const PORT = process.env.PORT || 3001;
