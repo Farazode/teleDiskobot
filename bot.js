@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const token = 'YOUR_TELEGRAM_BOT_TOKEN';
+const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
 const bot = new TelegramBot(token, { polling: true, request: { verbose: true } });
 
 const app = express();
@@ -27,7 +27,7 @@ bot.onText(/\/start/, (msg) => {
         [
           {
             text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://yourusername.github.io/teledisko-bot/' } // Update this to your actual GitHub Pages URL
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Update this to your actual GitHub Pages URL
           }
         ]
       ]
