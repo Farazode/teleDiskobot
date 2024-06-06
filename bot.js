@@ -48,7 +48,7 @@ bot.onText(/\/start/, (msg) => {
 
 bot.on('web_app_data', (msg) => {
   console.log('Received web_app_data event');
-  console.log('Event Data:', msg);
+  console.log('Event Data:', JSON.stringify(msg, null, 2)); // Log the full event data
 
   const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
   const userId = msg.from.id;
@@ -57,7 +57,7 @@ bot.on('web_app_data', (msg) => {
   console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
 
   if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/YourBotUsername?start=${userId}`;
+    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
     console.log('Generated invite link:', inviteLink);
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
       .then(() => console.log('Invite link sent to chat:', chatId))
@@ -67,13 +67,13 @@ bot.on('web_app_data', (msg) => {
 
 // Add a catch-all event listener to log all incoming messages
 bot.on('message', (msg) => {
-  console.log('Received a message:', msg);
+  console.log('Received a message:', JSON.stringify(msg, null, 2));
 });
 
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const inviteLink = `https://t.me/YourBotUsername?start=${userId}`;
+  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
 
   bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
 });
