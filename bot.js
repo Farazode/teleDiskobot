@@ -46,7 +46,6 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
 
-// Handle data sent from the web app
 bot.on('web_app_data', (msg) => {
   console.log('Received web_app_data event');
   console.log('Event Data:', msg);
@@ -58,7 +57,7 @@ bot.on('web_app_data', (msg) => {
   console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
 
   if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+    const inviteLink = `https://t.me/YourBotUsername?start=${userId}`;
     console.log('Generated invite link:', inviteLink);
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
       .then(() => console.log('Invite link sent to chat:', chatId))
@@ -74,7 +73,7 @@ bot.on('message', (msg) => {
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+  const inviteLink = `https://t.me/YourBotUsername?start=${userId}`;
 
   bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
 });
