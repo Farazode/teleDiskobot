@@ -24,6 +24,7 @@ bot.onText(/\/test/, (msg) => {
 
 // Handle web_app_data event
 bot.on('web_app_data', (msg) => {
+  console.log('web_app_data event received:', msg);
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
