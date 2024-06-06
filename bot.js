@@ -46,6 +46,12 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
 
+// Add a comprehensive log when the bot receives any message
+bot.on('message', (msg) => {
+  console.log('Received a message:', JSON.stringify(msg, null, 2));
+});
+
+// Handle data sent from the web app
 bot.on('web_app_data', (msg) => {
   console.log('Received web_app_data event');
   console.log('Event Data:', JSON.stringify(msg, null, 2)); // Log the full event data
@@ -63,11 +69,6 @@ bot.on('web_app_data', (msg) => {
       .then(() => console.log('Invite link sent to chat:', chatId))
       .catch((error) => console.error('Error sending invite link:', error));
   }
-});
-
-// Add a catch-all event listener to log all incoming messages
-bot.on('message', (msg) => {
-  console.log('Received a message:', JSON.stringify(msg, null, 2));
 });
 
 bot.onText(/\/invite/, (msg) => {
