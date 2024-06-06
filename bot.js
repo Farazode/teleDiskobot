@@ -37,7 +37,6 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
 
-// Handle data sent from the web app
 bot.on('web_app_data', (msg) => {
   console.log('Received web app data:', msg); // Log the received data
   const chatId = msg.chat.id;
