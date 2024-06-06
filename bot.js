@@ -20,6 +20,31 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// Log all incoming messages
+bot.on('message', (msg) => {
+  console.log('Received a message:', JSON.stringify(msg, null, 2));
+
+  // Handle web_app_data within the message event
+  if (msg.web_app_data) {
+    console.log('Received web_app_data event');
+    console.log('Event Data:', JSON.stringify(msg.web_app_data, null, 2));
+
+    const chatId = msg.chat.id;
+    const userId = msg.from.id;
+    const data = msg.web_app_data.data;
+
+    console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
+
+    if (data === 'get_invite_link') {
+      const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+      console.log('Generated invite link:', inviteLink);
+      bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
+        .then(() => console.log('Invite link sent to chat:', chatId))
+        .catch((error) => console.error('Error sending invite link:', error));
+    }
+  }
+});
+
 // Handle /start command
 bot.onText(/\/start/, (msg) => {
   console.log('Received /start command');
@@ -45,31 +70,6 @@ bot.onText(/\/start/, (msg) => {
   };
 
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
-});
-
-// Log all incoming messages
-bot.on('message', (msg) => {
-  console.log('Received a message:', JSON.stringify(msg, null, 2));
-});
-
-// Handle web_app_data event
-bot.on('web_app_data', (msg) => {
-  console.log('Received web_app_data event');
-  console.log('Event Data:', JSON.stringify(msg, null, 2));
-
-  const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
-  const userId = msg.from.id;
-  const data = msg.web_app_data.data;
-
-  console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
-
-  if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-    console.log('Generated invite link:', inviteLink);
-    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
-      .then(() => console.log('Invite link sent to chat:', chatId))
-      .catch((error) => console.error('Error sending invite link:', error));
-  }
 });
 
 // Handle errors
