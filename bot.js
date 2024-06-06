@@ -16,6 +16,19 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// Log when bot starts polling
+bot.on('polling_error', (error) => {
+  console.error('Polling error:', error);
+});
+
+bot.on('error', (error) => {
+  console.error('Bot error:', error);
+});
+
+bot.on('message', (msg) => {
+  console.log('Received message:', msg);
+});
+
 // Add a /test command to verify the bot can send messages
 bot.onText(/\/test/, (msg) => {
   const chatId = msg.chat.id;
@@ -24,7 +37,7 @@ bot.onText(/\/test/, (msg) => {
 
 // Handle web_app_data event
 bot.on('web_app_data', (msg) => {
-  console.log('web_app_data event received:', msg);
+  console.log('web_app_data event received:', JSON.stringify(msg)); // Log the event for debugging
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
