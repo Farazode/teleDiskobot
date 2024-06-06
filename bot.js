@@ -3,13 +3,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4'; // Your Telegram bot token
+const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
 const bot = new TelegramBot(token, { polling: true });
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.static('public'));
+
+const users = {};
 
 console.log('Bot is polling for updates...');
 
@@ -21,11 +23,18 @@ app.listen(PORT, '0.0.0.0', () => {
 // Log all types of updates
 bot.on('message', (msg) => {
   console.log('Received a message:', JSON.stringify(msg, null, 2));
+  if (msg.web_app_data) {
+    console.log('Received web_app_data event within message');
+    handleWebAppData(msg);
+  }
 });
 
 bot.on('web_app_data', (msg) => {
   console.log('Received web_app_data event:', JSON.stringify(msg, null, 2));
+  handleWebAppData(msg);
+});
 
+function handleWebAppData(msg) {
   const chatId = msg.message?.chat?.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
@@ -39,7 +48,7 @@ bot.on('web_app_data', (msg) => {
       .then(() => console.log('Invite link sent to chat:', chatId))
       .catch((error) => console.error('Error sending invite link:', error));
   }
-});
+}
 
 // Handle /start command
 bot.onText(/\/start/, (msg) => {
@@ -47,13 +56,17 @@ bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
 
+  if (!users[userId]) {
+    users[userId] = { invites: [], invitedBy: null };
+  }
+
   const options = {
     reply_markup: {
       inline_keyboard: [
         [
           {
             text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Ensure this URL is correct
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' }
           }
         ]
       ]
@@ -62,24 +75,6 @@ bot.onText(/\/start/, (msg) => {
 
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
-
-// Log all other events
-bot.on('callback_query', (query) => {
-  console.log('Received a callback query:', JSON.stringify(query, null, 2));
-});
-
-bot.on('inline_query', (query) => {
-  console.log('Received an inline query:', JSON.stringify(query, null, 2));
-});
-
-bot.on('chosen_inline_result', (result) => {
-  console.log('Received a chosen inline result:', JSON.stringify(result, null, 2));
-});
-
-// Log all errors
-bot.on('polling_error', (error) => console.error('Polling error:', error));
-bot.on('webhook_error', (error) => console.error('Webhook error:', error));
-bot.on('error', (error) => console.error('General error:', error));
 
 // Handle /invite command
 bot.onText(/\/invite/, (msg) => {
@@ -113,3 +108,7 @@ bot.onText(/\/start (\d+)/, (msg, match) => {
   }
 });
 
+// Log all errors
+bot.on('polling_error', (error) => console.error('Polling error:', error));
+bot.on('webhook_error', (error) => console.error('Webhook error:', error));
+bot.on('error', (error) => console.error('General error:', error));
