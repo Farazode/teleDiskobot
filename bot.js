@@ -20,69 +20,32 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-bot.onText(/\/start/, (msg) => {
-  console.log('Received /start command');
-  const chatId = msg.chat.id;
-  const userId = msg.from.id;
-  console.log(`Chat ID: ${chatId}, User ID: ${userId}`);
-
-  if (!users[userId]) {
-    users[userId] = { invites: [], invitedBy: null };
-  }
-
-  const options = {
-    reply_markup: {
-      inline_keyboard: [
-        [
-          {
-            text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Ensure this URL is correct
-          }
-        ]
-      ]
-    }
-  };
-
-  bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
-});
-
-// Add a comprehensive log when the bot receives any message
 bot.on('message', (msg) => {
   console.log('Received a message:', JSON.stringify(msg, null, 2));
-});
 
-// Handle data sent from the web app
-bot.on('web_app_data', (msg) => {
-  console.log('Received web_app_data event');
-  console.log('Event Data:', JSON.stringify(msg, null, 2)); // Log the full event data
+  if (msg.web_app_data) {
+    console.log('Received web_app_data event');
+    console.log('Event Data:', JSON.stringify(msg, null, 2));
 
-  const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
-  const userId = msg.from.id;
-  const data = msg.web_app_data.data;
+    const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
+    const userId = msg.from.id;
+    const data = msg.web_app_data.data;
 
-  console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
+    console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
 
-  if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-    console.log('Generated invite link:', inviteLink);
-    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
-      .then(() => console.log('Invite link sent to chat:', chatId))
-      .catch((error) => console.error('Error sending invite link:', error));
+    if (data === 'get_invite_link') {
+      const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+      console.log('Generated invite link:', inviteLink);
+      bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
+        .then(() => console.log('Invite link sent to chat:', chatId))
+        .catch((error) => console.error('Error sending invite link:', error));
+    }
   }
 });
 
-// Catch all other updates
 bot.on('polling_error', (error) => console.error('Polling error:', error));
 bot.on('webhook_error', (error) => console.error('Webhook error:', error));
 bot.on('error', (error) => console.error('General error:', error));
-
-bot.onText(/\/invite/, (msg) => {
-  const chatId = msg.chat.id;
-  const userId = msg.from.id;
-  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-
-  bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
-});
 
 bot.onText(/\/start (\d+)/, (msg, match) => {
   const chatId = msg.chat.id;
@@ -104,4 +67,30 @@ bot.onText(/\/start (\d+)/, (msg, match) => {
 
     bot.sendMessage(chatId, 'Thank you for joining! Now invite 2 more friends to unlock the secret group. Use /invite to get your unique invite link.');
   }
+});
+
+bot.onText(/\/start/, (msg) => {
+  console.log('Received /start command');
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  console.log(`Chat ID: ${chatId}, User ID: ${userId}`);
+
+  if (!users[userId]) {
+    users[userId] = { invites: [], invitedBy: null };
+  }
+
+  const options = {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: 'Open Teledisko Mini App',
+            web_app: { url: 'https://farazode.github.io/teleDisobot/' } // Ensure this URL is correct
+          }
+        ]
+      ]
+    }
+  };
+
+  bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
