@@ -37,15 +37,17 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
 
-bot.on('callback_query', (callbackQuery) => {
-  const msg = callbackQuery.message;
+bot.on('web_app_data', (msg) => {
   const chatId = msg.chat.id;
-  const userId = callbackQuery.from.id;
+  const userId = msg.from.id;
+  const data = msg.web_app_data.data;
 
-  if (callbackQuery.data === 'start_interaction') {
-    bot.sendMessage(chatId, 'Invite 2 friends to unlock the secret group. Use /invite to get your unique invite link.');
+  if (data === 'get_invite_link') {
+    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
   }
 });
+
 
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;

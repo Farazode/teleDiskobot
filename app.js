@@ -14,19 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   getInviteLinkButton.addEventListener('click', () => {
-    Telegram.WebApp.MainButton.text('Fetching invite link...').show();
-    fetch('/generate-invite-link')
-      .then(response => response.json())
-      .then(data => {
-        alert('Share this link with your friends: ' + data.link);
-        popup.style.display = 'none';
-        botResponse.textContent = 'Invite link generated. Check your Telegram chat!';
-        Telegram.WebApp.MainButton.hide();
-      })
-      .catch(error => {
-        console.error('Error generating invite link:', error);
-        botResponse.textContent = 'Failed to generate invite link. Please try again.';
-        Telegram.WebApp.MainButton.hide();
-      });
+    Telegram.WebApp.sendData('get_invite_link');  // Sends data to the bot
+    botResponse.textContent = 'Invite link request sent. Check your Telegram chat!';
+    popup.style.display = 'none';
   });
 });
