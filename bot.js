@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
+const token = 'YOUR_TELEGRAM_BOT_TOKEN';
 const bot = new TelegramBot(token, { polling: true, request: { verbose: true } });
 
 const app = express();
@@ -27,7 +27,7 @@ bot.onText(/\/start/, (msg) => {
         [
           {
             text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Update this to your actual GitHub Pages URL
+            web_app: { url: 'https://yourusername.github.io/teledisko-bot/' } // Update this to your actual GitHub Pages URL
           }
         ]
       ]
@@ -44,9 +44,15 @@ bot.on('web_app_data', (msg) => {
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
 
+  console.log('User ID:', userId);
+  console.log('Data received:', data);
+
   if (data === 'get_invite_link') {
     const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
+    console.log('Generated invite link:', inviteLink);
+    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
+      .then(() => console.log('Invite link sent to chat:', chatId))
+      .catch((error) => console.error('Error sending invite link:', error));
   }
 });
 
