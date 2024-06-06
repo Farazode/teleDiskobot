@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
+const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4'; // Your Telegram bot token
 const bot = new TelegramBot(token, { polling: true });
 
 const app = express();
@@ -13,10 +13,8 @@ app.use(express.static('public'));
 
 const users = {};
 
-// Add a log to confirm the bot has started polling
 console.log('Bot is polling for updates...');
 
-// Add a log to confirm Express server is running
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
@@ -38,7 +36,7 @@ bot.onText(/\/start/, (msg) => {
         [
           {
             text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Update this to your actual GitHub Pages URL
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Your GitHub Pages URL
           }
         ]
       ]
@@ -48,18 +46,19 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
 });
 
+// Handle data sent from the web app
 bot.on('web_app_data', (msg) => {
   console.log('Received web_app_data event');
   console.log('Event Data:', msg);
 
-  const chatId = msg.message.chat.id;
+  const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
 
   console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
 
   if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+    const inviteLink = `https://t.me/YourBotUsername?start=${userId}`;
     console.log('Generated invite link:', inviteLink);
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
       .then(() => console.log('Invite link sent to chat:', chatId))
@@ -75,7 +74,7 @@ bot.on('message', (msg) => {
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+  const inviteLink = `https://t.me/YourBotUsername?start=${userId}`;
 
   bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
 });
