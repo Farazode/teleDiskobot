@@ -85,7 +85,7 @@ bot.onText(/\/start/, (msg) => {
         [
           {
             text: 'Open Teledisko Mini App',
-            web_app: { url: 'https://farazode.github.io/teleDisobot/' } // Ensure this URL is correct
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Ensure this URL is correct
           }
         ]
       ]
