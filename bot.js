@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4'; // Replace with your actual bot token
+const token = '7010315190:AAHHcoW-NvgpVtFDQ6xLbe9RINk4akd2dX4'; // Replace with your actual bot token
 const bot = new TelegramBot(token, { polling: true });
 
 const app = express();
@@ -32,7 +32,7 @@ bot.on('web_app_data', (msg) => {
   console.log(`Received web_app_data: ${data} from user ${userId} in chat ${chatId}`);
 
   if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/teleDiskodancerbot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
+    const inviteLink = `https://t.me/teleDisk0bot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
       .then(() => console.log('Invite link sent'))
       .catch((error) => console.error('Error sending invite link:', error));
@@ -63,7 +63,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const inviteLink = `https://t.me/teleDiskodancerbot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
+  const inviteLink = `https://t.me/teleDisk0bot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
 
   bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
 });
