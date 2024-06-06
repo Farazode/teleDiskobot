@@ -14,30 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   getInviteLinkButton.addEventListener('click', () => {
+    Telegram.WebApp.MainButton.text('Fetching invite link...').show();
     fetch('/generate-invite-link')
       .then(response => response.json())
       .then(data => {
         alert('Share this link with your friends: ' + data.link);
         popup.style.display = 'none';
         botResponse.textContent = 'Invite link generated. Check your Telegram chat!';
+        Telegram.WebApp.MainButton.hide();
       })
       .catch(error => {
         console.error('Error generating invite link:', error);
         botResponse.textContent = 'Failed to generate invite link. Please try again.';
+        Telegram.WebApp.MainButton.hide();
       });
-  });
-
-  // Initialize Telegram Web App
-  const tg = window.Telegram.WebApp;
-  tg.ready();
-
-  // Use Telegram theme color for the popup
-  tg.MainButton.setParams({ text: 'Close' });
-  closePopupButton.addEventListener('click', () => {
-    tg.MainButton.hide();
-  });
-
-  getInviteLinkButton.addEventListener('click', () => {
-    tg.MainButton.hide();
   });
 });
