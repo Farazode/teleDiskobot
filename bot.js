@@ -71,6 +71,11 @@ bot.on('web_app_data', (msg) => {
   }
 });
 
+// Catch all other updates
+bot.on('polling_error', (error) => console.error('Polling error:', error));
+bot.on('webhook_error', (error) => console.error('Webhook error:', error));
+bot.on('error', (error) => console.error('General error:', error));
+
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
