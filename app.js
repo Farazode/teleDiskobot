@@ -17,4 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     console.error('getInviteLinkButton not found');
   }
+  
+  // Log if the Telegram object is available or not
+  if (window.Telegram) {
+    console.log('Telegram object is available');
+  } else {
+    console.error('Telegram object is not available');
+  }
 });
