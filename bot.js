@@ -18,15 +18,13 @@ app.listen(PORT, '0.0.0.0', () => {
 
 // Handle web_app_data event
 bot.on('web_app_data', (msg) => {
-  const chatId = msg.message?.chat?.id;
+  const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
 
   if (data === 'get_invite_link') {
     const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
-    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
-      .then(() => console.log('Invite link sent to chat:', chatId))
-      .catch((error) => console.error('Error sending invite link:', error));
+    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
   }
 });
 

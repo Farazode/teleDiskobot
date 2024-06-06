@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   getInviteLinkButton.addEventListener('click', () => {
     console.log('Get Invite Link button clicked');
     try {
-      Telegram.WebApp.sendData('get_invite_link');
+      Telegram.WebApp.sendData('get_invite_link'); // Ensure data is being sent correctly
       console.log('Data sent to bot: get_invite_link');
       botResponse.textContent = 'Invite link request sent. Check your Telegram chat!';
     } catch (error) {
