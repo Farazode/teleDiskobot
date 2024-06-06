@@ -16,15 +16,25 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// Add a /test command to verify the bot can send messages
+bot.onText(/\/test/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, 'The bot has permission to send messages.');
+});
+
 // Handle web_app_data event
 bot.on('web_app_data', (msg) => {
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
 
+  console.log(`Received web_app_data: ${data} from user ${userId} in chat ${chatId}`);
+
   if (data === 'get_invite_link') {
     const inviteLink = `https://t.me/teleDiskodancerbot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
-    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
+    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
+      .then(() => console.log('Invite link sent'))
+      .catch((error) => console.error('Error sending invite link:', error));
   }
 });
 
