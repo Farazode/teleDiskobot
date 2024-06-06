@@ -23,7 +23,7 @@ bot.on('web_app_data', (msg) => {
   const data = msg.web_app_data.data;
 
   if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
+    const inviteLink = `https://t.me/teleDiskodancerbot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
   }
 });
@@ -52,7 +52,7 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/\/invite/, (msg) => {
   const chatId = msg.chat.id;
   const userId = msg.from.id;
-  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
+  const inviteLink = `https://t.me/teleDiskodancerbot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
 
   bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
 });
