@@ -20,55 +20,7 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-bot.on('message', (msg) => {
-  console.log('Received a message:', JSON.stringify(msg, null, 2));
-
-  if (msg.web_app_data) {
-    console.log('Received web_app_data event');
-    console.log('Event Data:', JSON.stringify(msg, null, 2));
-
-    const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
-    const userId = msg.from.id;
-    const data = msg.web_app_data.data;
-
-    console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
-
-    if (data === 'get_invite_link') {
-      const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
-      console.log('Generated invite link:', inviteLink);
-      bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
-        .then(() => console.log('Invite link sent to chat:', chatId))
-        .catch((error) => console.error('Error sending invite link:', error));
-    }
-  }
-});
-
-bot.on('polling_error', (error) => console.error('Polling error:', error));
-bot.on('webhook_error', (error) => console.error('Webhook error:', error));
-bot.on('error', (error) => console.error('General error:', error));
-
-bot.onText(/\/start (\d+)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const newUserId = msg.from.id;
-  const inviterId = parseInt(match[1]);
-
-  if (!users[inviterId] || !users[newUserId]) {
-    users[newUserId] = { invites: [], invitedBy: inviterId };
-  }
-
-  if (users[inviterId].invites.includes(newUserId)) {
-    bot.sendMessage(chatId, 'You have already used this invite link.');
-  } else {
-    users[inviterId].invites.push(newUserId);
-
-    if (users[inviterId].invites.length >= 2) {
-      bot.sendMessage(inviterId, 'Congratulations! You have invited 2 friends. You now have access to the secret group.');
-    }
-
-    bot.sendMessage(chatId, 'Thank you for joining! Now invite 2 more friends to unlock the secret group. Use /invite to get your unique invite link.');
-  }
-});
-
+// Handle /start command
 bot.onText(/\/start/, (msg) => {
   console.log('Received /start command');
   const chatId = msg.chat.id;
@@ -93,4 +45,66 @@ bot.onText(/\/start/, (msg) => {
   };
 
   bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
+});
+
+// Log all incoming messages
+bot.on('message', (msg) => {
+  console.log('Received a message:', JSON.stringify(msg, null, 2));
+});
+
+// Handle web_app_data event
+bot.on('web_app_data', (msg) => {
+  console.log('Received web_app_data event');
+  console.log('Event Data:', JSON.stringify(msg, null, 2));
+
+  const chatId = msg.message?.chat?.id; // Use optional chaining to safely access nested properties
+  const userId = msg.from.id;
+  const data = msg.web_app_data.data;
+
+  console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
+
+  if (data === 'get_invite_link') {
+    const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+    console.log('Generated invite link:', inviteLink);
+    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
+      .then(() => console.log('Invite link sent to chat:', chatId))
+      .catch((error) => console.error('Error sending invite link:', error));
+  }
+});
+
+// Handle errors
+bot.on('polling_error', (error) => console.error('Polling error:', error));
+bot.on('webhook_error', (error) => console.error('Webhook error:', error));
+bot.on('error', (error) => console.error('General error:', error));
+
+// Handle /invite command
+bot.onText(/\/invite/, (msg) => {
+  const chatId = msg.chat.id;
+  const userId = msg.from.id;
+  const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
+
+  bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`);
+});
+
+// Handle /start with argument (invitation)
+bot.onText(/\/start (\d+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const newUserId = msg.from.id;
+  const inviterId = parseInt(match[1]);
+
+  if (!users[inviterId] || !users[newUserId]) {
+    users[newUserId] = { invites: [], invitedBy: inviterId };
+  }
+
+  if (users[inviterId].invites.includes(newUserId)) {
+    bot.sendMessage(chatId, 'You have already used this invite link.');
+  } else {
+    users[inviterId].invites.push(newUserId);
+
+    if (users[inviterId].invites.length >= 2) {
+      bot.sendMessage(inviterId, 'Congratulations! You have invited 2 friends. You now have access to the secret group.');
+    }
+
+    bot.sendMessage(chatId, 'Thank you for joining! Now invite 2 more friends to unlock the secret group. Use /invite to get your unique invite link.');
+  }
 });
