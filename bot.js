@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const token = '6701677975:AAF30UQoy2V1pxCSCq3uAmhaEcGUU2L4rl4';
-const bot = new TelegramBot(token, { polling: true, request: { verbose: true } });
+const bot = new TelegramBot(token, { polling: true });
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,9 +13,20 @@ app.use(express.static('public'));
 
 const users = {};
 
+// Add a log to confirm the bot has started polling
+console.log('Bot is polling for updates...');
+
+// Add a log to confirm Express server is running
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 bot.onText(/\/start/, (msg) => {
+  console.log('Received /start command');
   const chatId = msg.chat.id;
   const userId = msg.from.id;
+  console.log(`Chat ID: ${chatId}, User ID: ${userId}`);
 
   if (!users[userId]) {
     users[userId] = { invites: [], invitedBy: null };
@@ -38,13 +49,14 @@ bot.onText(/\/start/, (msg) => {
 });
 
 bot.on('web_app_data', (msg) => {
-  console.log('Received web app data:', msg); // Log the received data
-  const chatId = msg.chat.id;
+  console.log('Received web_app_data event');
+  console.log('Event Data:', msg);
+
+  const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
 
-  console.log('User ID:', userId);
-  console.log('Data received:', data);
+  console.log(`Chat ID: ${chatId}, User ID: ${userId}, Data: ${data}`);
 
   if (data === 'get_invite_link') {
     const inviteLink = `https://t.me/YOUR_BOT_USERNAME?start=${userId}`;
@@ -53,6 +65,11 @@ bot.on('web_app_data', (msg) => {
       .then(() => console.log('Invite link sent to chat:', chatId))
       .catch((error) => console.error('Error sending invite link:', error));
   }
+});
+
+// Add a catch-all event listener to log all incoming messages
+bot.on('message', (msg) => {
+  console.log('Received a message:', msg);
 });
 
 bot.onText(/\/invite/, (msg) => {
@@ -83,9 +100,4 @@ bot.onText(/\/start (\d+)/, (msg, match) => {
 
     bot.sendMessage(chatId, 'Thank you for joining! Now invite 2 more friends to unlock the secret group. Use /invite to get your unique invite link.');
   }
-});
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
 });
