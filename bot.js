@@ -16,17 +16,21 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-// Log when bot starts polling
+// Log polling errors
 bot.on('polling_error', (error) => {
-  console.error('Polling error:', error);
+  console.error('Polling error:', error.code);
+  console.error('Polling error details:', error);
 });
 
+// Log general bot errors
 bot.on('error', (error) => {
-  console.error('Bot error:', error);
+  console.error('Bot error:', error.code);
+  console.error('Bot error details:', error);
 });
 
+// Log all incoming messages
 bot.on('message', (msg) => {
-  console.log('Received message:', msg);
+  console.log('Received message:', JSON.stringify(msg, null, 2));
 });
 
 // Add a /test command to verify the bot can send messages
@@ -35,9 +39,14 @@ bot.onText(/\/test/, (msg) => {
   bot.sendMessage(chatId, 'The bot has permission to send messages.');
 });
 
+// Log all updates received by the bot
+bot.on('update', (update) => {
+  console.log('Received update:', JSON.stringify(update, null, 2));
+});
+
 // Handle web_app_data event
 bot.on('web_app_data', (msg) => {
-  console.log('web_app_data event received:', JSON.stringify(msg)); // Log the event for debugging
+  console.log('web_app_data event received:', JSON.stringify(msg, null, 2));
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
@@ -45,7 +54,7 @@ bot.on('web_app_data', (msg) => {
   console.log(`Received web_app_data: ${data} from user ${userId} in chat ${chatId}`);
 
   if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/teleDisk0bot?start=${userId}`; // Replace YOUR_BOT_USERNAME with your bot's username
+    const inviteLink = `https://t.me/teleDisk0bot?start=${userId}`;
     bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
       .then(() => console.log('Invite link sent'))
       .catch((error) => console.error('Error sending invite link:', error));
