@@ -40,10 +40,12 @@ bot.on('update', (update) => {
 
 bot.on('web_app_data', (msg) => {
   console.log('web_app_data event received:', JSON.stringify(msg, null, 2));
-  if (!msg.message || !msg.from || !msg.web_app_data) {
+
+  if (!msg.message || !msg.message.chat || !msg.from || !msg.web_app_data) {
     console.error('Incomplete web_app_data event:', JSON.stringify(msg, null, 2));
     return;
   }
+
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
