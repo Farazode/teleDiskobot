@@ -27,11 +27,11 @@ bot.on('message', (msg) => {
           username: msg.from.username 
         }
       },
-      from: { // This is the missing property
-        id: userId,
-        first_name: msg.from.first_name,
-        last_name: msg.from.last_name,
-        username: msg.from.username
+      from: { 
+        id: userId, 
+        first_name: msg.from.first_name, 
+        last_name: msg.from.last_name, 
+        username: msg.from.username 
       },
       web_app_data: { data: 'get_invite_link' }
     };
