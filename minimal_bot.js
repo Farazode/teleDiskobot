@@ -20,12 +20,18 @@ bot.on('message', (msg) => {
     const fakeWebAppData = {
       message: {
         chat: { id: chatId },
-        from: {
-          id: userId,
-          first_name: msg.from.first_name,
-          last_name: msg.from.last_name,
-          username: msg.from.username
+        from: { 
+          id: userId, 
+          first_name: msg.from.first_name, 
+          last_name: msg.from.last_name, 
+          username: msg.from.username 
         }
+      },
+      from: { // This is the missing property
+        id: userId,
+        first_name: msg.from.first_name,
+        last_name: msg.from.last_name,
+        username: msg.from.username
       },
       web_app_data: { data: 'get_invite_link' }
     };
@@ -46,6 +52,11 @@ bot.on('web_app_data', (msg) => {
   console.log('msg.message.chat:', JSON.stringify(msg.message.chat, null, 2));
   console.log('msg.from:', JSON.stringify(msg.from, null, 2));
   console.log('msg.web_app_data:', JSON.stringify(msg.web_app_data, null, 2));
+
+  if (!msg.message || !msg.message.chat || !msg.message.chat.id || !msg.from || !msg.from.id || !msg.web_app_data || !msg.web_app_data.data) {
+    console.error('Incomplete web_app_data event:', JSON.stringify(msg, null, 2));
+    return;
+  }
 
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
