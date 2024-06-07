@@ -14,15 +14,22 @@ bot.on('error', (error) => {
 bot.on('message', (msg) => {
   console.log('Received message:', JSON.stringify(msg, null, 2));
   const chatId = msg.chat.id;
+  const userId = msg.from.id;
 
   if (msg.text === '/test_web_app_data') {
     const fakeWebAppData = {
       message: {
         chat: { id: chatId },
-        from: { id: msg.from.id }
+        from: { 
+          id: userId, 
+          first_name: msg.from.first_name || 'First', 
+          last_name: msg.from.last_name || 'Last', 
+          username: msg.from.username || 'username' 
+        },
       },
       web_app_data: { data: 'get_invite_link' }
     };
+    console.log('Emitting fake web_app_data event:', JSON.stringify(fakeWebAppData, null, 2));
     bot.emit('web_app_data', fakeWebAppData);
   }
 });
@@ -33,6 +40,10 @@ bot.on('update', (update) => {
 
 bot.on('web_app_data', (msg) => {
   console.log('web_app_data event received:', JSON.stringify(msg, null, 2));
+  if (!msg.message || !msg.from || !msg.web_app_data) {
+    console.error('Incomplete web_app_data event:', JSON.stringify(msg, null, 2));
+    return;
+  }
   const chatId = msg.message.chat.id;
   const userId = msg.from.id;
   const data = msg.web_app_data.data;
