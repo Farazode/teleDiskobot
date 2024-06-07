@@ -27,3 +27,22 @@ bot.onText(/\/test/, (msg) => {
 bot.on('web_app_data', (msg) => {
   console.log('web_app_data event received:', JSON.stringify(msg, null, 2));
 });
+
+bot.onText(/\/start/, (msg) => {
+  const chatId = msg.chat.id;
+
+  const options = {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: 'Open Teledisko Mini App',
+            web_app: { url: 'https://farazode.github.io/teleDiskobot/' } // Ensure this URL is correct
+          }
+        ]
+      ]
+    }
+  };
+
+  bot.sendMessage(chatId, 'Welcome to Teledisko Bot! Click the button below to start the interaction.', options);
+});
