@@ -22,10 +22,10 @@ bot.on('message', (msg) => {
         chat: { id: chatId },
         from: { 
           id: userId, 
-          first_name: msg.from.first_name || 'First', 
-          last_name: msg.from.last_name || 'Last', 
-          username: msg.from.username || 'username' 
-        },
+          first_name: msg.from.first_name, 
+          last_name: msg.from.last_name, 
+          username: msg.from.username 
+        }
       },
       web_app_data: { data: 'get_invite_link' }
     };
@@ -41,22 +41,21 @@ bot.on('update', (update) => {
 bot.on('web_app_data', (msg) => {
   console.log('web_app_data event received:', JSON.stringify(msg, null, 2));
 
-  if (!msg.message || !msg.message.chat || !msg.message.chat.id || !msg.from || !msg.from.id || !msg.web_app_data || !msg.web_app_data.data) {
+  if (msg.message && msg.message.chat && msg.from && msg.web_app_data) {
+    const chatId = msg.message.chat.id;
+    const userId = msg.from.id;
+    const data = msg.web_app_data.data;
+
+    console.log(`Received web_app_data: ${data} from user ${userId} in chat ${chatId}`);
+
+    if (data === 'get_invite_link') {
+      const inviteLink = `https://t.me/teleDisk0bot?start=${userId}`;
+      bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
+        .then(() => console.log('Invite link sent'))
+        .catch((error) => console.error('Error sending invite link:', error));
+    }
+  } else {
     console.error('Incomplete web_app_data event:', JSON.stringify(msg, null, 2));
-    return;
-  }
-
-  const chatId = msg.message.chat.id;
-  const userId = msg.from.id;
-  const data = msg.web_app_data.data;
-
-  console.log(`Received web_app_data: ${data} from user ${userId} in chat ${chatId}`);
-
-  if (data === 'get_invite_link') {
-    const inviteLink = `https://t.me/teleDisk0bot?start=${userId}`;
-    bot.sendMessage(chatId, `Share this link with your friends: ${inviteLink}`)
-      .then(() => console.log('Invite link sent'))
-      .catch((error) => console.error('Error sending invite link:', error));
   }
 });
 
